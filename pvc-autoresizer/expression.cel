@@ -1,0 +1,38 @@
+// StorageClass should have 'resize.topolvm.io/enabled' annotation
+!('resize.topolvm.io/enabled' in sc.metadata.annotations) ||
+  sc.metadata.annotations['resize.topolvm.io/enabled'] != 'true' ?
+  deny("resize is not enabled for the StorageClass") :
+
+// PVC should have 'resize.topolvm.io/storage_limit' annotation
+// and it is larger than 0Byte
+!('resize.topolvm.io/storage_limit' in pvc.metadata.annotations) ||
+  quantity(pvc.metadata.annotations['resize.topolvm.io/storage_limit']).asInteger() == 0 ?
+  deny("resize limit is not set for the PVC") :
+
+// PVC's volume mode should be Filesystem
+pvc.spec.volumeMode != '' && pvc.spec.volumeMode != 'Filesystem' ?
+  deny("PVC's volume mode should be Filesystem") :
+
+// PVC's phase should be Bound
+pvc.status.phase != 'Bound' ?
+  deny("PVC's phase should be Bound") :
+
+// PVC should have capacity and it is larger than 0Byte
+!('storage' in pvc.status.capacity) ||
+  k8sQuantityAsInteger(pvc.status.capacity['storage']) == 0 ?
+  deny("PVC should have capacity") :
+
+(
+  !('resize.topolvm.io/threshold' in pvc.metadata.annotations) ||
+    pvc.metadata.annotations['resize.topolvm.io/threshold'] == '' ? (
+    // 🚧 TODO: 10% of the capacity as default threshold value
+    stats.capacityBytes / 10
+  ) : (
+    pvc.metadata.annotations['resize.topolvm.io/threshold'].endsWith('%') ? (
+      // 🚧 TODO: Implement percentage calculation
+      1
+    ) : (
+      quantity(pvc.metadata.annotations['resize.topolvm.io/threshold']).asInteger()
+    )
+  )
+)

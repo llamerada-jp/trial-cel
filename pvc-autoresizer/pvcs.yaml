@@ -1,0 +1,71 @@
+items:
+
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: pvc-01
+    namespace: default
+    annotations:
+      resize.topolvm.io/storage_limit: 100Gi
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    # volumeMode: Filesystem
+    resources:
+      requests:
+        storage: 30Gi
+    storageClassName: topolvm-provisioner
+  status:
+    phase: Bound
+    capacity:
+      storage: 30Gi
+
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: pvc-02
+    namespace: default
+    annotations:
+      resize.topolvm.io/storage_limit: 100Gi
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    volumeMode: Filesystem
+    resources:
+      requests:
+        storage: 30Gi
+    storageClassName: topolvm-provisioner
+  status:
+    phase: Bound
+    capacity:
+      storage: 30Gi
+
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: pvc-03
+    namespace: default
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    volumeMode: Filesystem
+    resources:
+      requests:
+        storage: 30Gi
+    storageClassName: topolvm-provisioner
+
+- kind: PersistentVolumeClaim
+  apiVersion: v1
+  metadata:
+    name: pvc-04
+    namespace: default
+    annotations:
+      resize.topolvm.io/storage_limit: 100Gi
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    volumeMode: Filesystem
+    resources:
+      requests:
+        storage: 30Gi
+    storageClassName: some-provisioner

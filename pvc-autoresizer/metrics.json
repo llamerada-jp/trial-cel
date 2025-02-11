@@ -1,0 +1,18 @@
+{
+  "pvc-01": {
+    "capacityBytes": 100,
+    "availableBytes": 50
+  },
+  "pvc-02": {
+    "capacityBytes": 100,
+    "availableBytes": 80
+  },
+  "pvc-03": {
+    "capacityBytes": 100,
+    "availableBytes": 90
+  },
+  "pvc-04": {
+    "capacityBytes": 100,
+    "availableBytes": 95
+  }
+}
